@@ -16,6 +16,8 @@ npm install graphql
 
 ## Usage
 
+This library is still very much work in progress, more instructions will be added soon!
+
 ## License
 
 MIT

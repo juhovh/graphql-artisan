@@ -5,7 +5,7 @@
 [![Build status][travis-image]][travis-url]
 [![Test coverage][coveralls-image]][coveralls-url]
 
-> Type safe GraphQL query generator for TypeScript. **Works with `typescript@>=2.0`**.
+> Type safe GraphQL query generator for TypeScript. **Works with `typescript@>=3.0`**.
 
 ## Installation
 

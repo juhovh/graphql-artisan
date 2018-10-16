@@ -17,8 +17,8 @@
   ],
   "homepage": "https://github.com/juhovh/graphql-artisan",
   "scripts": {
-    "prepublish": "npm run clean && npm run build",
-    "clean": "rm -rf coverage build",
+    "prepublishOnly": "npm run clean && npm run build",
+    "clean": "rm -rf coverage dist",
     "test": "jest --verbose --forceExit --detectOpenHandles --coverage",
     "test-coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
     "build": "npm run tslint && npm run build-ts",

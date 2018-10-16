@@ -1,0 +1,6 @@
+{
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "prettier.tslintIntegration": true,
+  "tslint.exclude": ["**/dist/**", "**/node_modules/**"]
+}

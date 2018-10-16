@@ -1,0 +1,14 @@
+fragment userIdFragment on User @fragmentdef {
+  id @field
+}
+
+query testQuery($variable: ID) @query @operation {
+  user(id: $variable) {
+    ...userIdFragment @fragmentspread
+    ... on User @inlinefragment {
+      firstName @field
+      lastNameWithoutDirective: lastName
+    }
+    lastName @field
+  }
+}

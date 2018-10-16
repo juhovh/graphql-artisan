@@ -1,0 +1,6 @@
+mutation testMutation {
+  user(id: "123", name: "name") {
+    id
+    name
+  }
+}

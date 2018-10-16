@@ -1,0 +1,27 @@
+directive @query on QUERY
+directive @mutation on MUTATION
+directive @subscription on SUBSCRIPTION
+directive @operation on QUERY | MUTATION | SUBSCRIPTION
+directive @field on FIELD
+directive @fragmentdef on FRAGMENT_DEFINITION
+directive @fragmentspread on FRAGMENT_SPREAD
+directive @inlinefragment on INLINE_FRAGMENT
+directive @variabledef on VARIABLE_DEFINITION
+
+type User {
+  id: ID!
+  firstName: String
+  lastName: String
+}
+
+type Query {
+  user(id: ID): User
+}
+
+type Mutation {
+  foo(id: ID): String
+}
+
+type Subscription {
+  foo: String
+}

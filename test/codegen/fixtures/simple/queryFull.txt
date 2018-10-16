@@ -1,0 +1,6 @@
+query testQuery {
+  user(id: "123") {
+    id
+    name
+  }
+}

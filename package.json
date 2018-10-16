@@ -2,7 +2,7 @@
   "name": "graphql-artisan",
   "version": "0.1.2",
   "description": "TypeScript compatible GraphQL generator.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "author": "Juho Vähä-Herttua",
   "license": "MIT",
   "repository": {
@@ -12,6 +12,7 @@
   "keywords": [
     "graphql",
     "query",
+    "dsl",
     "builder",
     "typescript"
   ],

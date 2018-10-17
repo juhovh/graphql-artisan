@@ -66,6 +66,41 @@ This can be serialized into the following GraphQL query:
 }
 ```
 
+This might not seem very interesting, but notice that you can also generate queries like this:
+
+```typescript
+function users(...userIds: number[]) {
+  return userIds.map(id =>
+    Query.user({ id }).select(
+      User.id(),
+      User.name()
+    ).as(`user${id}`)
+  );
+}
+schema.query().select(users(1, 2, 3));
+```
+
+The query above will be serialized as:
+
+```graphql
+{
+  user1: user(id: 1) {
+    id
+    name
+  }
+  user2: user(id: 2) {
+    id
+    name
+  }
+  user3: user(id: 3) {
+    id
+    name
+  }
+}
+```
+
+All without any ugly string concatenations or unsafe operations.
+
 ### Named queries
 
 Just like above, you can also name your queries, which is required to be able to add directives:

@@ -1,0 +1,40 @@
+type User {
+  id: ID!
+  name: String!
+  age: Int
+}
+
+interface Message {
+  id: ID!
+  createdBy: ID!
+  title: String!
+}
+
+type Headline implements Message {
+  id: ID!
+  createdBy: ID!
+  title: String!
+  tags: [String]
+}
+
+type Article implements Message {
+  id: ID!
+  createdBy: ID!
+  title: String!
+  content: String
+}
+
+input UserEdit {
+  id: ID!
+  name: String
+  age: Int
+}
+
+type Query {
+  user(id: ID!): User
+  userMessages(id: ID): [Message!]!
+}
+
+type Mutation {
+  updateUser(user: UserEdit!): User
+}

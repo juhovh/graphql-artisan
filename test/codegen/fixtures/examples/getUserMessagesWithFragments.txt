@@ -1,0 +1,13 @@
+{
+  userMessages(id: "123") {
+    id
+    createdBy
+    title
+    ... on Headline {
+      tags
+    }
+    ... on Article {
+      content
+    }
+  }
+}

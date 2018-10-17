@@ -1,0 +1,7 @@
+{
+  userMessages(id: "123") {
+    id
+    createdBy
+    title
+  }
+}

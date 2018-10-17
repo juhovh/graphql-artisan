@@ -1,0 +1,6 @@
+mutation mutationName {
+  updateUser(user: {id: "123", name: "John Doe"}) {
+    id
+    name
+  }
+}

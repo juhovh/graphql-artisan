@@ -1,0 +1,6 @@
+{
+  user(id: "123") {
+    id @skip(if: true)
+    name
+  }
+}

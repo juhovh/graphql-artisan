@@ -16,6 +16,11 @@ import {
   VariableBuilder
 } from "./types";
 
+interface SelectFunction<TSelection, TResult> {
+  (selections: Array<TSelection>): TResult;
+  (selection: TSelection, ...selections: Array<TSelection>): TResult;
+}
+
 type OperationBuilder<
   TDirective extends Directive,
   TChild extends Selection
@@ -23,7 +28,7 @@ type OperationBuilder<
   name: string,
   ...directives: Array<TDirective>
 ) => {
-  select: (selection: TChild, ...selections: Array<TChild>) => Operation;
+  select: SelectFunction<TChild, Operation>;
 };
 
 // The only difference with OperationBuilder is that name is optional
@@ -34,7 +39,7 @@ type QueryOperationBuilder<
   name?: string,
   ...directives: Array<TDirective>
 ) => {
-  select: (selection: TChild, ...selections: Array<TChild>) => Operation;
+  select: SelectFunction<TChild, Operation>;
 };
 
 type DirectiveBuilder<
@@ -54,7 +59,7 @@ type ScalarBuilderWithArgs<
 type FieldBuilder<TField extends Field, TChild extends Selection> = (
   ...directives: Array<FieldDirective>
 ) => {
-  select: (selection: TChild, ...selections: Array<TChild>) => TField;
+  select: SelectFunction<TChild, TField>;
 };
 
 type FieldBuilderWithArgs<
@@ -65,7 +70,7 @@ type FieldBuilderWithArgs<
   args: TArgs,
   ...directives: Array<FieldDirective>
 ) => {
-  select: (selection: TChild, ...selections: Array<TChild>) => TField;
+  select: SelectFunction<TChild, TField>;
 };
 
 type InlineFragmentBuilder<
@@ -74,7 +79,7 @@ type InlineFragmentBuilder<
 > = (
   ...directives: Array<InlineFragmentDirective>
 ) => {
-  select: (selection: TChild, ...selections: Array<TChild>) => TFragment;
+  select: SelectFunction<TChild, TFragment>;
 };
 
 type FragmentDefinitionBuilder<
@@ -84,10 +89,7 @@ type FragmentDefinitionBuilder<
   name: string,
   ...directives: Array<FragmentDefinitionDirective>
 ) => {
-  select: (
-    selection: TChild,
-    ...selections: Array<TChild>
-  ) => FragmentDefinition<TFragment>;
+  select: SelectFunction<TChild, FragmentDefinition<TFragment>>;
 };
 
 export function createDirective<TDirective extends Directive>(
@@ -158,12 +160,31 @@ export function createScalarWithArgs<
   };
 }
 
+function mergeSelections<T extends Selection>(
+  selection: T | Array<T>,
+  selections: Array<T>
+): ReadonlyArray<Selection> {
+  if (selection instanceof Array) {
+    return selection;
+  } else {
+    return [selection, ...selections];
+  }
+}
+
 export function createField<TField extends Field, TChild extends Selection>(
   name: string
 ): FieldBuilder<TField, TChild> {
   return (...directives: Array<FieldDirective>) => ({
-    select: (selection: TChild, ...selections: Array<TChild>) => {
-      return getFieldBuilder(name, {}, directives, [selection, ...selections]);
+    select: (
+      selection: TChild | Array<TChild>,
+      ...selections: Array<TChild>
+    ) => {
+      return getFieldBuilder(
+        name,
+        {},
+        directives,
+        mergeSelections(selection, selections)
+      ) as TField;
     }
   });
 }
@@ -174,11 +195,16 @@ export function createFieldWithArgs<
   TArgs extends Record<string, InputType>
 >(name: string): FieldBuilderWithArgs<TField, TChild, TArgs> {
   return (args: TArgs, ...directives: Array<FieldDirective>) => ({
-    select: (selection: TChild, ...selections: Array<TChild>) => {
-      return getFieldBuilder(name, args, directives, [
-        selection,
-        ...selections
-      ]);
+    select: (
+      selection: TChild | Array<TChild>,
+      ...selections: Array<TChild>
+    ) => {
+      return getFieldBuilder(
+        name,
+        args,
+        directives,
+        mergeSelections(selection, selections)
+      ) as TField;
     }
   });
 }
@@ -188,12 +214,12 @@ export function createInlineFragment<
   TChild extends Selection
 >(type: string): InlineFragmentBuilder<TFragment, TChild> {
   return (...directives: Array<InlineFragmentDirective>) => ({
-    select: (selection: TChild, ...selections: Array<TChild>) =>
+    select: (selection: TChild | Array<TChild>, ...selections: Array<TChild>) =>
       ({
         selectionType: "InlineFragment",
         type,
         directives: directives as ReadonlyArray<Directive>,
-        selectionSet: [selection, ...selections] as ReadonlyArray<Selection>
+        selectionSet: mergeSelections(selection, selections)
       } as TFragment)
   });
 }
@@ -203,12 +229,12 @@ export function createFragmentDefinition<
   TChild extends Selection
 >(type: string): FragmentDefinitionBuilder<TFragment, TChild> {
   return (name: string, ...directives: Array<FragmentDefinitionDirective>) => ({
-    select: (selection: TChild, ...selections: Array<TChild>) =>
+    select: (selection: TChild | Array<TChild>, ...selections: Array<TChild>) =>
       ({
         name,
         type,
         directives: directives as ReadonlyArray<Directive>,
-        selectionSet: [selection, ...selections] as ReadonlyArray<Selection>,
+        selectionSet: mergeSelections(selection, selections),
         spread: (...directives: Array<FragmentSpreadDirective>) =>
           ({
             selectionType: "FragmentSpread",
@@ -237,20 +263,30 @@ export function createOperation<
   | OperationBuilder<TDirective, TChild> {
   if (type === "query") {
     return (name?: string, ...directives: Array<TDirective>) => ({
-      select: (selection: TChild, ...selections: Array<TChild>) => {
-        return new Operation(type, name, directives, [
-          selection,
-          ...selections
-        ]);
+      select: (
+        selection: TChild | Array<TChild>,
+        ...selections: Array<TChild>
+      ) => {
+        return new Operation(
+          type,
+          name,
+          directives,
+          selection instanceof Array ? selection : [selection, ...selections]
+        );
       }
     });
   } else {
     return (name: string, ...directives: Array<TDirective>) => ({
-      select: (selection: TChild, ...selections: Array<TChild>) => {
-        return new Operation(type, name, directives, [
-          selection,
-          ...selections
-        ]);
+      select: (
+        selection: TChild | Array<TChild>,
+        ...selections: Array<TChild>
+      ) => {
+        return new Operation(
+          type,
+          name,
+          directives,
+          mergeSelections(selection, selections)
+        );
       }
     });
   }

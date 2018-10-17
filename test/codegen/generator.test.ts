@@ -40,6 +40,13 @@ describe("An example schema", () => {
   test("can get a user", () => {
     assertValidQuery(fixturePath, "getUser.ts", "getUser.txt");
   });
+  test("can get multiple users", () => {
+    assertValidQuery(
+      fixturePath,
+      "getMultipleUsers.ts",
+      "getMultipleUsers.txt"
+    );
+  });
   test("can get a user with a named query", () => {
     assertValidQuery(fixturePath, "getUserNamed.ts", "getUserNamed.txt");
   });

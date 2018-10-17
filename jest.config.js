@@ -8,6 +8,7 @@ module.exports = {
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest"
   },
-  testMatch: ["**/test/**/*.test.(ts|js)"],
-  testEnvironment: "node"
+  testMatch: ["**/test/**/*.test.{ts,js}"],
+  testEnvironment: "node",
+  collectCoverageFrom: ["**/src/**/*.{ts,js}"]
 };

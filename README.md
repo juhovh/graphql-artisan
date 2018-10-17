@@ -42,7 +42,7 @@ schema {
 }
 ```
 
-### Simple query
+### Simple queries
 
 You can create anonymous queries with a simple syntax:
 
@@ -172,6 +172,35 @@ The inline fragments will now be serialized into the query as specified:
     ... on Article {
       content
     }
+  }
+}
+```
+
+### Mutations
+
+Mutations work just like queries and the arguments are also typed as expected. If doing multiple mutations you can also always rely that the order of the selections in code is the same as in the resulting query. An example mutation could go like this:
+
+```typescript
+schema.mutation("mutationName").select(
+  Mutation.updateUser({
+    user: {
+      id: "123",
+      name: "John Doe"
+    }
+  }).select(
+    User.id(),
+    User.name()
+  )
+);
+```
+
+You will then get your mutation as a GraphQL query string when serialized:
+
+```graphql
+mutation mutationName {
+  updateUser(user: {id: "123", name: "John Doe"}) {
+    id
+    name
   }
 }
 ```

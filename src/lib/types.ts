@@ -84,18 +84,25 @@ export interface VariableDefinitionDirective extends Directive {
 }
 
 export class VariableBuilder<TName extends string, TValue> {
-  readonly baseType: TName;
-  readonly name: string;
+  private baseType: TName;
+  private name: string;
   private type: string;
-  constructor(type: TName, name: string) {
+  private directives: ReadonlyArray<VariableDefinitionDirective>;
+  constructor(
+    type: TName,
+    name: string,
+    directives: ReadonlyArray<VariableDefinitionDirective>
+  ) {
     this.baseType = type;
     this.name = name;
     this.type = `${this.baseType}!`;
+    this.directives = directives;
   }
   array(): VariableBuilder<TName, Array<TValue>> {
     const builder = new VariableBuilder<TName, Array<TValue>>(
       this.baseType,
-      this.name
+      this.name,
+      this.directives
     );
     builder.type = `[${this.type}]!`;
     return builder;
@@ -103,39 +110,32 @@ export class VariableBuilder<TName extends string, TValue> {
   nullable(): VariableBuilder<TName, TValue | undefined> {
     const builder = new VariableBuilder<TName, TValue | undefined>(
       this.baseType,
-      this.name
+      this.name,
+      this.directives
     );
     if (this.type.substr(this.type.length - 1) === "!") {
       builder.type = this.type.substr(0, this.type.length - 1);
     }
     return builder;
   }
-  getDefinition(
-    ...directives: Array<VariableDefinitionDirective>
-  ): VariableDefinition<TName, TValue> {
+  getDefinition(defaultValue?: TValue): VariableDefinition<TName, TValue> {
     return new VariableDefinition<TName, TValue>(
       this.type,
       this.name,
-      directives
+      this.directives,
+      defaultValue
     );
   }
 }
 
 export class VariableDefinition<TName extends string, TValue> {
   readonly __VariableDefinition: unknown;
-  private _defaultValue?: TValue;
   constructor(
     readonly type: string,
     readonly name: string,
-    readonly directives: ReadonlyArray<VariableDefinitionDirective>
+    readonly directives: ReadonlyArray<VariableDefinitionDirective>,
+    readonly defaultValue?: TValue
   ) {}
-  get defaultValue() {
-    return this._defaultValue;
-  }
-  withDefaultValue(defaultValue: TValue): this {
-    this._defaultValue = defaultValue;
-    return this;
-  }
   getVariable() {
     return new Variable<TName, TValue>(this.name);
   }

@@ -12,7 +12,8 @@ import {
   FragmentDefinitionDirective,
   FragmentSpread,
   FragmentSpreadDirective,
-  VariableBuilder
+  VariableBuilder,
+  VariableDefinitionDirective
 } from "./types";
 
 interface SelectFunction<TSelection, TResult> {
@@ -113,7 +114,8 @@ export function createDirectiveWithArgs<
 }
 
 export function createVariable<TName extends string, TValue>(type: TName) {
-  return (name: string) => new VariableBuilder<TName, TValue>(type, name);
+  return (name: string, ...directives: Array<VariableDefinitionDirective>) =>
+    new VariableBuilder<TName, TValue>(type, name, directives);
 }
 
 function getFieldBuilder<TField extends Field>(

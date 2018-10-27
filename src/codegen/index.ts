@@ -10,7 +10,8 @@ import {
   IntrospectionDirective,
   IntrospectionSchema,
   IntrospectionInputValue,
-  IntrospectionScalarType
+  IntrospectionScalarType,
+  IntrospectionOutputTypeRef
 } from "graphql";
 
 function getType<T>(
@@ -144,6 +145,16 @@ interface ${type.name}Field extends Field {
 interface ${type.name}Fragment extends InlineFragment, FragmentSpread {
   __${type.name}Fragment: unknown;
 }
+export interface ${type.name}$Type {
+  ${type.fields
+    .map(field => defineOutputArgument(types, field, false) + ";")
+    .join("\n  ")}
+}
+export interface ${type.name}$PartialType {
+  ${type.fields
+    .map(field => defineOutputArgument(types, field, true) + ";")
+    .join("\n  ")}
+}
 export const ${type.name}$InlineFragment = ${defineInlineFragment(type)};
 export const ${type.name}$FragmentDefinition = ${defineFragmentDefinition(
     type
@@ -168,22 +179,57 @@ function defineInputValue(
     valueType = valueType.ofType;
   }
   if (valueType.kind === "LIST") {
-    return `Array<${defineInputValue(types, valueType.ofType)}${nullableType}>`;
-  } else {
-    const type = getType(types, valueType);
-    if (type.kind === "INPUT_OBJECT") {
-      return typeOrVariable(type.name, `${type.name}InputType${nullableType}`);
-    } else if (type.kind === "ENUM") {
-      return (
-        type.enumValues.map(val => `"${val.name}"`).join(" | ") + nullableType
-      );
-    } else if (type.kind === "SCALAR") {
-      return typeOrVariable(type.name, getScalarType(type) + nullableType);
-    }
-    throw new Error(
-      `Unknown input type "${valueType.name}: ${valueType.kind}"`
-    );
+    return `Array<${defineInputValue(types, valueType.ofType)}>${nullableType}`;
   }
+  const type = getType(types, valueType);
+  if (type.kind === "INPUT_OBJECT") {
+    return typeOrVariable(type.name, `${type.name}InputType${nullableType}`);
+  } else if (type.kind === "ENUM") {
+    return (
+      type.enumValues.map(val => `"${val.name}"`).join(" | ") + nullableType
+    );
+  } else if (type.kind === "SCALAR") {
+    return typeOrVariable(type.name, getScalarType(type) + nullableType);
+  }
+  throw new Error(`Unknown input type "${valueType.name}: ${valueType.kind}"`);
+}
+
+function defineOutputValue(
+  types: ReadonlyArray<IntrospectionType>,
+  valueType: IntrospectionOutputTypeRef,
+  isPartial: boolean
+): string {
+  function namedType(name: string) {
+    return isPartial ? `${name}$PartialType` : `${name}$Type`;
+  }
+  const nullableType =
+    isPartial || valueType.kind !== "NON_NULL" ? " | undefined" : "";
+  if (valueType.kind === "NON_NULL") {
+    valueType = valueType.ofType;
+  }
+  if (valueType.kind === "LIST") {
+    return `Array<${defineOutputValue(
+      types,
+      valueType.ofType,
+      isPartial
+    )}>${nullableType}`;
+  }
+  const type = getType(types, valueType);
+  if (type.kind === "OBJECT") {
+    return namedType(type.name) + nullableType;
+  } else if (type.kind === "UNION" || type.kind === "INTERFACE") {
+    return (
+      type.possibleTypes.map(type => namedType(type.name)).join(" | ") +
+      nullableType
+    );
+  } else if (type.kind === "ENUM") {
+    return (
+      type.enumValues.map(val => `"${val.name}"`).join(" | ") + nullableType
+    );
+  } else if (type.kind === "SCALAR") {
+    return getScalarType(type) + nullableType;
+  }
+  throw new Error(`Unknown output type "${valueType.name}: ${valueType.kind}"`);
 }
 
 function defineInputArgument(
@@ -195,6 +241,17 @@ function defineInputArgument(
     types,
     argument.type
   )}`;
+}
+
+function defineOutputArgument(
+  types: ReadonlyArray<IntrospectionType>,
+  argument: IntrospectionField,
+  isPartial: boolean
+) {
+  const nullable = argument.type.kind !== "NON_NULL";
+  return `${argument.name}${
+    isPartial || nullable ? "?" : ""
+  }: ${defineOutputValue(types, argument.type, isPartial)}`;
 }
 
 function defineInputObject(

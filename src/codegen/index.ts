@@ -183,7 +183,7 @@ function defineInputValue(
   }
   const type = getType(types, valueType);
   if (type.kind === "INPUT_OBJECT") {
-    return typeOrVariable(type.name, `${type.name}InputType${nullableType}`);
+    return typeOrVariable(type.name, `${type.name}${nullableType}`);
   } else if (type.kind === "ENUM") {
     return (
       type.enumValues.map(val => `"${val.name}"`).join(" | ") + nullableType
@@ -261,7 +261,7 @@ function defineInputObject(
   return `
 export const ${type.name}$Variable = createVariable<"${type.name}", ${
     type.name
-  }InputType>("${type.name}");
+  }>("${type.name}");
 export interface ${type.name} extends InputObject {
   ${type.inputFields
     .map(field => defineInputArgument(types, field) + ";")

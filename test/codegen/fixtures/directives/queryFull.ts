@@ -18,7 +18,7 @@ const userIdFragment = User$FragmentDefinition(
 ).select(User.id($field));
 
 const variable = ID$Variable("variable")
-  .nullable()
+  .asNullable()
   .getDefinition();
 
 export default schema

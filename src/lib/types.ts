@@ -98,7 +98,7 @@ export class VariableBuilder<TName extends string, TValue> {
     this.type = `${this.baseType}!`;
     this.directives = directives;
   }
-  array(): VariableBuilder<TName, Array<TValue>> {
+  intoArray(): VariableBuilder<TName, Array<TValue>> {
     const builder = new VariableBuilder<TName, Array<TValue>>(
       this.baseType,
       this.name,
@@ -107,7 +107,7 @@ export class VariableBuilder<TName extends string, TValue> {
     builder.type = `[${this.type}]!`;
     return builder;
   }
-  nullable(): VariableBuilder<TName, TValue | undefined> {
+  asNullable(): VariableBuilder<TName, TValue | undefined> {
     const builder = new VariableBuilder<TName, TValue | undefined>(
       this.baseType,
       this.name,

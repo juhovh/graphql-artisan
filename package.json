@@ -2,7 +2,7 @@
   "name": "graphql-artisan",
   "version": "0.1.5",
   "description": "TypeScript compatible GraphQL generator.",
-  "main": "dist/index.js",
+  "main": "index",
   "author": "Juho Vähä-Herttua",
   "license": "MIT",
   "repository": {
@@ -19,7 +19,7 @@
   "homepage": "https://github.com/juhovh/graphql-artisan",
   "scripts": {
     "prepublishOnly": "npm run clean && npm run build",
-    "clean": "rm -rf coverage dist",
+    "clean": "rm -rf coverage index.* lib codegen",
     "test": "jest --verbose --forceExit --detectOpenHandles --coverage",
     "test-coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls",
     "build": "npm run tslint && npm run build-ts",
@@ -29,7 +29,6 @@
   "devDependencies": {
     "@types/graphql": "^14.0.0",
     "@types/jest": "^23.3.2",
-    "@types/node": "^10.10.3",
     "coveralls": "^3.0.2",
     "graphql": "^14.0.2",
     "jest": "^23.6.0",

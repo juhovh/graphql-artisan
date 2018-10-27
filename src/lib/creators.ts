@@ -12,7 +12,6 @@ import {
   FragmentDefinitionDirective,
   FragmentSpread,
   FragmentSpreadDirective,
-  VariableDefinition,
   VariableBuilder
 } from "./types";
 

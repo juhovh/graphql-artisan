@@ -119,26 +119,23 @@ export class VariableBuilder<TName extends string, TValue> {
     return builder;
   }
   getDefinition(defaultValue?: TValue): VariableDefinition<TName, TValue> {
-    return new VariableDefinition<TName, TValue>(
-      this.type,
-      this.name,
-      this.directives,
-      defaultValue
-    );
+    return {
+      type: this.type,
+      name: this.name,
+      directives: this.directives,
+      defaultValue: defaultValue,
+      getVariable: () => new Variable<TName, TValue>(this.name)
+    } as VariableDefinition<TName, TValue>;
   }
 }
 
-export class VariableDefinition<TName extends string, TValue> {
+export interface VariableDefinition<TName extends string, TValue> {
   readonly __VariableDefinition: unknown;
-  constructor(
-    readonly type: string,
-    readonly name: string,
-    readonly directives: ReadonlyArray<VariableDefinitionDirective>,
-    readonly defaultValue?: TValue
-  ) {}
-  getVariable() {
-    return new Variable<TName, TValue>(this.name);
-  }
+  readonly type: string;
+  readonly name: string;
+  readonly directives: ReadonlyArray<VariableDefinitionDirective>;
+  readonly defaultValue?: TValue;
+  readonly getVariable: () => Variable<TName, TValue>;
 }
 
 export class Variable<TName extends string, TValue> {

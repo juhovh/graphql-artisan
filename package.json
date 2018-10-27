@@ -1,6 +1,6 @@
 {
   "name": "graphql-artisan",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "TypeScript compatible GraphQL generator.",
   "main": "index",
   "author": "Juho Vähä-Herttua",

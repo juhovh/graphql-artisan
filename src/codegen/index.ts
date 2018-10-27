@@ -262,7 +262,7 @@ function defineInputObject(
 export const ${type.name}$Variable = createVariable<"${type.name}", ${
     type.name
   }InputType>("${type.name}");
-export interface ${type.name}InputType extends InputObject {
+export interface ${type.name} extends InputObject {
   ${type.inputFields
     .map(field => defineInputArgument(types, field) + ";")
     .join("\n  ")}

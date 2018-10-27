@@ -4,15 +4,15 @@ import {
   FragmentDefinition,
   FragmentSpread,
   QueryDirective
-} from "../src/types";
+} from "../src/lib/types";
 import {
   createScalar,
   createField,
   createInlineFragment,
   createOperation,
   createFieldWithArgs
-} from "../src/creators";
-import { printOperation } from "../src/printers";
+} from "../src/lib/creators";
+import { printOperation } from "../src/lib/printers";
 
 interface QueryField extends Field {
   __QueryField: unknown;

@@ -8,7 +8,7 @@ import {
   IntrospectionQuery
 } from "graphql";
 import * as ts from "typescript";
-import { defineSchema } from "../../src/codegen/generator";
+import { defineSchema } from "../../src/codegen";
 import { Operation } from "../../src";
 
 const tsOptions: ts.CompilerOptions = {

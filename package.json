@@ -3,7 +3,7 @@
   "version": "0.1.8",
   "description": "TypeScript compatible GraphQL generator.",
   "main": "index",
-  "bin": "cli/index",
+  "bin": "cli/index.js",
   "author": "Juho Vähä-Herttua",
   "license": "MIT",
   "repository": {

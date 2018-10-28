@@ -1,0 +1,3 @@
+{
+  three(value: {one: {id: 123}, two: $test})
+}

@@ -1,7 +1,7 @@
 import { processSchema, assertValidQuery, assertInvalidQuery } from "./utils";
 
 describe("A schema with query arguments", () => {
-  const fixturePath = "arguments";
+  const fixturePath = "scalarArguments";
   beforeAll(async () => {
     await processSchema(fixturePath);
   });

@@ -1,0 +1,8 @@
+type Query {
+  scalar(value: String!): String
+  nullableScalar(value: String): String
+  scalarArray(value: [String!]!): String
+  nullableScalarArray(value: [String]!): String
+  nullableScalarNullableArray(value: [String]): String
+  nullableScalarDoubleNullableArray(value: [[String]]): String
+}

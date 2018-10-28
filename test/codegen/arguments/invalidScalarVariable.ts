@@ -1,8 +1,6 @@
 import schema, { Query, String$Variable } from "./schema";
 
-const variableDef = String$Variable("test")
-  .asNullable()
-  .getDefinition();
+const variableDef = String$Variable("test").nullable.getDefinition();
 const variable = variableDef.getVariable();
 
 export default schema.query().select(Query.scalar({ value: variable }));

@@ -17,9 +17,7 @@ const userIdFragment = User$FragmentDefinition(
   $fragmentdef
 ).select(User.id($field));
 
-const variable = ID$Variable("variable")
-  .asNullable()
-  .getDefinition();
+const variable = ID$Variable("variable").nullable.getDefinition();
 
 export default schema
   .query("testQuery", $query, $operation)

@@ -1,0 +1,3 @@
+{
+  nullableScalar(value: null)
+}

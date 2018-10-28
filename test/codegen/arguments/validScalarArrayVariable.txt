@@ -1,0 +1,3 @@
+query name($test: [String]) {
+  scalar(value: $test)
+}

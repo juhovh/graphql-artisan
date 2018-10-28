@@ -10,13 +10,20 @@
 ## Installation
 
 ```sh
-npm install graphql-artisan
-npm install graphql
+npm install graphql graphql-artisan
 ```
 
 ## Usage
 
-This library is still very much work in progress, more instructions will be added soon!
+The library comes with a CLI that allows converting the GraphQL schema into a TypeScript GraphQL query generator API. Currently only `.graphql` schema files are supported, but support for introspection JSON and GraphQL server endpoints is to be added later.
+
+To convert a schema file into typescript, simply run:
+
+```sh
+graphql-artisan input.graphql output.ts
+```
+
+The output will also depend on the `graphql-artisan` and `graphql` libraries and can be imported to your program for dynamic query generation.
 
 ## Examples
 

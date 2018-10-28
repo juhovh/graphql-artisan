@@ -1,6 +1,6 @@
 {
   "name": "graphql-artisan",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "TypeScript compatible GraphQL generator.",
   "main": "index",
   "bin": "cli/index",

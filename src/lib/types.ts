@@ -125,8 +125,8 @@ export interface VariableDefinition<TName extends string, TValue> {
 }
 
 export class Variable<TName extends string, TValue> {
-  readonly __VariableType?: TName;
-  readonly __VariableValue?: TValue;
+  readonly __VariableType: TName | undefined;
+  readonly __VariableValue: TValue | undefined;
   constructor(readonly name: string) {}
 }
 

@@ -22,4 +22,7 @@ describe("A schema with object query arguments", () => {
       "validObjectNestedVariable.txt"
     );
   });
+  test("should not accept invalid variable", () => {
+    assertInvalidQuery(fixturePath, "invalidObjectVariable.ts");
+  });
 });

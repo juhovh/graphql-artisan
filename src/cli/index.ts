@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /* tslint:disable no-console */
 import { readFileSync, writeFileSync } from "fs";
 import {

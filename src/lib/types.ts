@@ -88,6 +88,7 @@ export class VariableBuilder<TName extends string, TValue> {
   private name: string;
   private type: string;
   private directives: ReadonlyArray<VariableDefinitionDirective>;
+  private defaultValue?: TValue;
   constructor(
     type: TName,
     name: string,
@@ -119,11 +120,12 @@ export class VariableBuilder<TName extends string, TValue> {
     return builder;
   }
   getDefinition(defaultValue?: TValue): VariableDefinition<TName, TValue> {
+    this.defaultValue = defaultValue;
     return {
       type: this.type,
       name: this.name,
       directives: this.directives,
-      defaultValue: defaultValue,
+      defaultValue: this.defaultValue,
       getVariable: () => new Variable<TName, TValue>(this.name)
     } as VariableDefinition<TName, TValue>;
   }

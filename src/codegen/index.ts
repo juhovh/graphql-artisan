@@ -167,6 +167,41 @@ export const ${type.name} = {
 `;
 }
 
+function getInputTypeName(
+  typeRef: IntrospectionInputTypeRef
+): string | undefined {
+  if (typeRef.kind === "NON_NULL" || typeRef.kind === "LIST") {
+    return getInputTypeName(typeRef.ofType);
+  } else if (typeRef.kind === "INPUT_OBJECT" || typeRef.kind === "SCALAR") {
+    return typeRef.name;
+  } else {
+    return undefined;
+  }
+}
+
+function getInputType(
+  types: ReadonlyArray<IntrospectionType>,
+  typeRef: IntrospectionInputTypeRef
+): string {
+  const nullableType = typeRef.kind !== "NON_NULL" ? " | undefined" : "";
+  if (typeRef.kind === "NON_NULL") {
+    typeRef = typeRef.ofType;
+  }
+  if (typeRef.kind === "LIST") {
+    return `Array<${getInputType(types, typeRef.ofType)}>${nullableType}`;
+  }
+  const type = getType(types, typeRef);
+  if (type.kind === "SCALAR") {
+    return `${getScalarType(type)}${nullableType}`;
+  } else if (type.kind === "ENUM") {
+    const enumValues = type.enumValues.map(val => `"${val.name}"`).join(" | ");
+    return `${enumValues}${nullableType}`;
+  } else if (type.kind === "INPUT_OBJECT") {
+    return `${type.name}$InputType${nullableType}`;
+  }
+  throw new Error(`Unknown input type "${typeRef.name}: ${typeRef.kind}"`);
+}
+
 function defineInputValue(
   types: ReadonlyArray<IntrospectionType>,
   valueType: IntrospectionInputTypeRef
@@ -174,24 +209,13 @@ function defineInputValue(
   function typeOrVariable(typeName: string, typeValue: string) {
     return `${typeValue} | Variable<"${typeName}", ${typeValue}>`;
   }
-  const nullableType = valueType.kind !== "NON_NULL" ? " | undefined" : "";
-  if (valueType.kind === "NON_NULL") {
-    valueType = valueType.ofType;
+  const inputTypeName = getInputTypeName(valueType);
+  const inputType = getInputType(types, valueType);
+  if (inputTypeName) {
+    return typeOrVariable(inputTypeName, inputType);
+  } else {
+    return inputType;
   }
-  if (valueType.kind === "LIST") {
-    return `Array<${defineInputValue(types, valueType.ofType)}>${nullableType}`;
-  }
-  const type = getType(types, valueType);
-  if (type.kind === "INPUT_OBJECT") {
-    return typeOrVariable(type.name, `${type.name}$InputType${nullableType}`);
-  } else if (type.kind === "ENUM") {
-    return (
-      type.enumValues.map(val => `"${val.name}"`).join(" | ") + nullableType
-    );
-  } else if (type.kind === "SCALAR") {
-    return typeOrVariable(type.name, getScalarType(type) + nullableType);
-  }
-  throw new Error(`Unknown input type "${valueType.name}: ${valueType.kind}"`);
 }
 
 function defineOutputValue(

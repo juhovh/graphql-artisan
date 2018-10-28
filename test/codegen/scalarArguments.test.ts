@@ -43,7 +43,7 @@ describe("A schema with query arguments", () => {
     );
   });
   // FIXME: This test should not fail
-  test.skip("should accept valid scalar array variables", () => {
+  test("should accept valid scalar array variables", () => {
     assertValidQuery(
       fixturePath,
       "validScalarArrayVariable.ts",

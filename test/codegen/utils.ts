@@ -1,4 +1,4 @@
-import { readFileSync, unlinkSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 import * as path from "path";
 import {
   graphql,
@@ -33,7 +33,6 @@ export async function processSchema(fixturePath: string) {
   const query = data as IntrospectionQuery;
   const sourcePath = `${pathPrefix}../../src`;
   const generatorStr = defineSchema(query.__schema, sourcePath);
-  unlinkSync(outputFile);
   writeFileSync(outputFile, generatorStr);
   return outputFile;
 }

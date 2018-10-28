@@ -1,0 +1,19 @@
+input Object {
+  id: ID!
+}
+
+type Query {
+  scalar(value: String!): String
+  nullableScalar(value: String): String
+  scalarArray(value: [String!]!): String
+  nullableScalarArray(value: [String]!): String
+  nullableScalarNullableArray(value: [String]): String
+  nullableScalarDoubleNullableArray(value: [[String]]): String
+
+  object(value: Object!): String
+  nullableObject(value: Object): String
+  objectArray(value: [Object!]!): String
+  nullableObjectArray(value: [Object]!): String
+  nullableObjectNullableArray(value: [Object]): String
+  nullableObjectDoubleNullableArray(value: [[String]]): String
+}

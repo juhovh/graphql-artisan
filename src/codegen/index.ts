@@ -286,7 +286,7 @@ function defineInputObject(
 export const ${type.name}$Variable = createVariable<"${type.name}", ${
     type.name
   }$InputType>("${type.name}");
-export interface ${type.name}$InputType extends InputObject {
+export interface ${type.name}$InputType {
   ${type.inputFields
     .map(field => defineInputArgument(types, field) + ";")
     .join("\n  ")}
@@ -297,7 +297,6 @@ export interface ${type.name}$InputType extends InputObject {
 function defineImport(module: string = "graphql-artisan") {
   return `/* tslint: disable */
 import {
-  InputObject,
   QueryDirective,
   MutationDirective,
   SubscriptionDirective,

@@ -1,0 +1,20 @@
+input One {
+  id: ID
+}
+
+input Two {
+  id: ID
+  one: One
+}
+
+input Three {
+  id: ID
+  one: One
+  two: Two
+}
+
+type Query {
+  one(value: One): String
+  two(value: Two): String
+  three(value: Three): String
+}

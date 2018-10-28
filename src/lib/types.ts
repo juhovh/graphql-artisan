@@ -1,18 +1,6 @@
 import { PrintOptions, printOperation } from "./printers";
 
-// There is no limit on nesting arrays in GraphQL, we limit to 3
-export type InputType =
-  | undefined
-  | unknown
-  | boolean
-  | number
-  | string
-  | InputObject
-  | Array<undefined | unknown | boolean | number | string | InputObject>
-  | Variable<
-      any,
-      undefined | unknown | boolean | number | string | InputObject
-    >;
+export type InputType = unknown;
 
 export type OperationType = "query" | "mutation" | "subscription";
 export class Operation {
@@ -47,10 +35,6 @@ export class Operation {
   print(options: PrintOptions = {}): string {
     return printOperation(this, options);
   }
-}
-
-export interface InputObject {
-  readonly __InputObject: unknown;
 }
 
 export interface Directive {

@@ -16,7 +16,7 @@ import {
   VariableDefinitionDirective
 } from "./types";
 
-interface SelectFunction<TSelection, TResult> {
+export interface SelectFunction<TSelection, TResult> {
   (selections: Array<TSelection>): TResult;
   (selection: TSelection, ...selections: Array<TSelection>): TResult;
 }
